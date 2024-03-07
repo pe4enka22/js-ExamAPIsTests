@@ -36,16 +36,13 @@ describe('ApiTests', () => {
 
   it('Update non-existing entity', () => { //success
     const notExistingPostId = 249;
-    const updatedPost = {
-      title: 'Updated Post Title',
-      body: 'This is the updated body of the post.'
-    };
 
     cy.log('Request update of not existing post in body');
     cy.request({
       method: 'PUT',
       url: `/posts/${notExistingPostId}`,
-      body: updatedPost,
+      title: 'Updated Post Title',
+      body: 'This is the updated body of the post.',
       failOnStatusCode: false
 
     }).then((response) => {
@@ -90,9 +87,7 @@ describe('ApiTests', () => {
       });
 
     it('Create post entity, update the created entity, and delete the entity', () => {
-      let userId = '';
       let postId = '';
-      let accessToken = '';
 
       cy.log('Create new post');
       cy.request({

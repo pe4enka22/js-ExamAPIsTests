@@ -1,17 +1,14 @@
 describe('ApiTests', () => {
     it('Create a post on invalid page', () => {
         const newPostId = 1147;
-        const createNewPost = {
-            title: 'TestTitle',
-            body: 'Test body',
-            id: newPostId
-        };
 
         cy.log('Try to create post on /664/posts page');
         cy.request({
             method: 'POST',
             url: "/664/posts",
-            body: createNewPost,
+            title: 'TestTitle',
+            body: 'Test body',
+            id: newPostId,
             failOnStatusCode: false
 
         }).then(response => {

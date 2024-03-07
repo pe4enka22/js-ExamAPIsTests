@@ -48,16 +48,13 @@ describe('ApiTests', () => {
 
     it('Create post entity and verify that the entity is created', () => {
         cy.log('Add json post data for request');
-        const createPost = {
-            title: 'TestTitle',
-            body: 'Test body'
-        };
 
         cy.log('Create post by created json post in body');
         cy.request({
             method: 'POST',
             url: '/posts',
-            body: createPost
+            title: 'TestTitle',
+            body: 'Test body'
 
         }).then((response) => {
             cy.log('Verify status code is 201 and post is created with correct data');
