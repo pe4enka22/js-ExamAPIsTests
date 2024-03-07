@@ -1,8 +1,9 @@
+import {faker} from '@faker-js/faker'
+const userLogin = faker.internet.displayName({ firstName: 'Jeanne', lastName: 'Doe'});
+const userPassword = faker.internet.password();
 describe('ApiTests', () => {
   it('Create post with adding access token in header', () => { //success
     let token = '';
-    let userLogin = "testUse1r";
-    let userPassword = "testPasswor1d";
 
     cy.log('Create new user')
     cy.request({
@@ -31,7 +32,6 @@ describe('ApiTests', () => {
    })
   })
 
-
   it('Update non-existing entity', () => { //success
       cy.log('Update post by user');
       const updatedPost = {
@@ -51,7 +51,6 @@ describe('ApiTests', () => {
       expect(response.status).to.eq(404); // in fact it's 500
   })
     })
-
 
 
     it('Create post entity and update the created entity', () => {
