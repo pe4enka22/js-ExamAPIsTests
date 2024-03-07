@@ -26,7 +26,7 @@ describe('ApiTests', () => {
 
     cy.request({
       method: 'POST',
-      url: 'https://jsonplaceholder.typicode.com/664/posts',
+      url: '/664/posts',
       body: newPost,
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
@@ -221,5 +221,4 @@ describe('ApiTests', () => {
       });
     });
   })
-
 })

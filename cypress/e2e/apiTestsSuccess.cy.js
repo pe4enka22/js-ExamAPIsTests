@@ -38,7 +38,7 @@ describe('ApiTests', () => {
             body: "get posts with ids"
 
         }).then(response => {
-            cy.log('Verify status code is 200 and post quantity is 2');
+            cy.log('Verify status code is 200 and posts quantity is 2');
             expect(response.status).to.be.equal(200);
             expect(response.body.length).to.eq(2);
 
@@ -54,17 +54,15 @@ describe('ApiTests', () => {
         const createPost = {
             title: 'TestTitle',
             body: 'Test body',
-            userId: 1
+            id: '101'
         };
 
-        cy.log('Request post by created json post in body');
+        cy.log('Create post by created json post in body');
         cy.request({
             method: 'POST',
-            url: 'https://jsonplaceholder.typicode.com/posts',
-            body: createPost,
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
+            url: '/posts',
+            body: 'create new post'
+
         }).then((response) => {
             cy.log('Verify status code is 201');
             expect(response.status).to.eq(201);
