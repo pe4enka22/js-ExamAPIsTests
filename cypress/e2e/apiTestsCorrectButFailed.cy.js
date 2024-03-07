@@ -1,9 +1,10 @@
 describe('ApiTests', () => {
     it('Create a post on invalid page', () => {
+        const newPostId = 1147;
         const createNewPost = {
             title: 'TestTitle',
             body: 'Test body',
-            id: '102'
+            id: newPostId
         };
 
         cy.log('Try to create post on /664/posts page');
@@ -20,25 +21,27 @@ describe('ApiTests', () => {
     })
 
     it('Delete non-existing post entity', () => {
+        const notExistingPostId = 247;
+
         cy.log('Check that post is not exist');
         cy.request({
             method: 'GET',
-            url: '/posts/1014343',
+            url: `/posts/${notExistingPostId}`,
             failOnStatusCode: false
+
         }).then((response) => {
-            cy.log('Verify status code is 404');
+            cy.log('Verify status code is 404 and page not found');
             expect(response.status).to.eq(404);
         })
 
         cy.log('Check that not existed post can not be deleted');
         cy.request({
             method: 'DELETE',
-            url: '/posts/1014343',
+            url: `/posts/${notExistingPostId}`,
             failOnStatusCode: false
         }).then((response) => {
             cy.log('Verify status code on deletion is 404');
             expect(response.status).to.eq(404); //in fact - 200
         })
     })
-
 })

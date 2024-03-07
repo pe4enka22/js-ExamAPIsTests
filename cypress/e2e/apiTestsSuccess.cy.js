@@ -47,11 +47,10 @@ describe('ApiTests', () => {
     })
 
     it('Create post entity and verify that the entity is created', () => {
-        cy.log('Add json post for request');
+        cy.log('Add json post data for request');
         const createPost = {
             title: 'TestTitle',
-            body: 'Test body',
-            id: '101'
+            body: 'Test body'
         };
 
         cy.log('Create post by created json post in body');
@@ -61,8 +60,10 @@ describe('ApiTests', () => {
             body: createPost
 
         }).then((response) => {
-            cy.log('Verify status code is 201');
+            cy.log('Verify status code is 201 and post is created with correct data');
             expect(response.status).to.eq(201);
+            expect(response.body.title).to.eq('TestTitle');
+            expect(response.body.body).to.eq('Test body');
         });
     })
 })
