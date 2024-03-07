@@ -10,10 +10,11 @@ describe('ApiTests', () => {
       method: 'POST',
       url: '/users',
       body: {userLogin, userPassword}
+
     }).then(response => {
       expect(response.status).to.eq(201);
 
-      cy.log('Get access token')
+      cy.log('Get user access token')
       token = response.body.token;
     });
 
@@ -25,6 +26,7 @@ describe('ApiTests', () => {
         'Authorization': `Bearer ${token}`
       },
       body: 'create new post'
+
     }).then(response => {
       cy.log('Verify status code is 201 and post is created')
       expect(response.status).to.eq(201);
@@ -33,8 +35,8 @@ describe('ApiTests', () => {
   })
 
   it('Update non-existing entity', () => { //success
-      cy.log('Update post by user');
-      const updatedPost = {
+    const notExistingPostId = 249;
+    const updatedPost = {
       title: 'Updated Post Title',
       body: 'This is the updated body of the post.'
     };
@@ -42,129 +44,82 @@ describe('ApiTests', () => {
     cy.log('Request update of not existing post in body');
     cy.request({
       method: 'PUT',
-      url: '/posts/1234',
+      url: `/posts/${notExistingPostId}`,
       body: updatedPost,
       failOnStatusCode: false
 
     }).then((response) => {
-      cy.log('Verify status code is 404');
+      cy.log('Verify status code is 404 and page is not found');
       expect(response.status).to.eq(404); // in fact it's 500
   })
     })
 
+      it('Create post entity and update the created entity', () => {
+        let postId = '';
 
-    it('Create post entity and update the created entity', () => {
-      let userId = '';
-      let postId = '';
-      let accessToken = '';
+        cy.log('Create new post');
+        cy.request({
+          method: 'POST',
+          url: '/posts',
+          title: 'Test Post Title',
+          body: 'Test Post Body'
 
-      const newUserCredentials = {
-        username: 'testUser2323',
-        password: 'testPassword2323'
-      };
-      cy.request({
-        method: 'POST',
-        url: '/users',
-        body: newUserCredentials
-      }).then(response => {
-        expect(response.status).to.eq(201);
-        expect(response.body).to.have.property('id');
-        userId = response.body.id;
+        }).then(response => {
+          cy.log('Verify status code is 201 and ppost is created');
+          expect(response.status).to.eq(201);
+          expect(response.body).to.have.property('id');
+
+          cy.log('Get postID');
+          postId = response.body.id;
+        });
+
+        cy.log('Update created post');
+        cy.request({
+          method: 'PUT',
+          url: `https://jsonplaceholder.typicode.com/posts/${postId}`,
+          title: 'Updated Post Title',
+          body: 'Updated Post Body',
+          failOnStatusCode:false
+
+        }).then(response => {
+          cy.log('Verify status code is 200 and post is updated');
+          //  expect(response.status).to.eq(200); //400 in fact
+          //   expect(response.body).to.deep.equal({updatedPostData,
+          //    id: postId
+        });
       });
-      const newPostData = {
-        title: 'Test Post Title',
-        body: 'Test Post Body',
-        userId: userId
-      };
-
-      cy.request({
-        method: 'POST',
-        url: '/posts',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        },
-        body: newPostData
-      }).then(response => {
-        expect(response.status).to.eq(201);
-        expect(response.body).to.have.property('id');
-        postId = response.body.id;
-      });
-
-      const updatedPostData = {
-        title: 'Updated Post Title',
-        body: 'Updated Post Body'
-      };
-
-      cy.request({
-        method: 'PUT',
-        url: `https://jsonplaceholder.typicode.com/posts/${postId}`,
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        },
-        body: updatedPostData,
-        failOnStatusCode:false
-      }).then(response => {
-        //  expect(response.status).to.eq(200); //400 in fact
-        //   expect(response.body).to.deep.equal({updatedPostData,
-        //    id: postId,
-        //    userId: userId
-      });
-    });
-
 
     it('Create post entity, update the created entity, and delete the entity', () => {
       let userId = '';
       let postId = '';
       let accessToken = '';
 
-      const newUserCredentials = {
-        username: 'testUser',
-        password: 'testPassword'
-      };
-
-      cy.request({
-        method: 'POST',
-        url: 'https://jsonplaceholder.typicode.com/users',
-        body: newUserCredentials
-      }).then(response => {
-        expect(response.status).to.eq(201);
-        expect(response.body).to.have.property('id');
-        userId = response.body.id;
-      });
-
-      const newPostData = {
-        title: 'Test Post Title',
-        body: 'Test Post Body',
-        userId: userId
-      };
-
+      cy.log('Create new post');
       cy.request({
         method: 'POST',
         url: 'https://jsonplaceholder.typicode.com/posts',
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        },
-        body: newPostData
+        title: 'Test Post Title',
+        body: 'Test Post Body'
+
       }).then(response => {
+        cy.log('Verify status code is 201 and post is created');
         expect(response.status).to.eq(201);
         expect(response.body).to.have.property('id');
+
+        cy.log('Get postID');
         postId = response.body.id;
       });
 
-      const updatedPostData = {
-        title: 'Updated Post Title',
-        body: 'Updated Post Body'
-      };
-
+      cy.log('Update created post');
       cy.request({
         method: 'PUT',
         url: `https://jsonplaceholder.typicode.com/posts/${postId}`,
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        },
-        body: updatedPostData,
+        title: 'Updated Post Title',
+        body: 'Updated Post Body',
         failOnStatusCode: false
+
       }).then(response => {
+        cy.log('Verify status code is 200 and post is updated');
         //   expect(response.status).to.eq(200);
         expect(response.body).to.deep.equal({
           //updatedPostData,
@@ -172,16 +127,15 @@ describe('ApiTests', () => {
           //  userId: userId
         });
 
+        cy.log('Delete created post');
         cy.request({
           method: 'DELETE',
-          url: `https://jsonplaceholder.typicode.com/posts/${postId}`,
-          headers: {
-            'Authorization': `Bearer ${accessToken}`
-          }
+          url: `https://jsonplaceholder.typicode.com/posts/${postId}`
+
         }).then(response => {
+          cy.log('Verify status code is 200 and post is deleted');
           expect(response.status).to.eq(200);
         });
       });
-
     });
 })

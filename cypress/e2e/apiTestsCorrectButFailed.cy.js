@@ -39,6 +39,7 @@ describe('ApiTests', () => {
             method: 'DELETE',
             url: `/posts/${notExistingPostId}`,
             failOnStatusCode: false
+
         }).then((response) => {
             cy.log('Verify status code on deletion is 404');
             expect(response.status).to.eq(404); //in fact - 200
