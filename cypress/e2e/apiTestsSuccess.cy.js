@@ -4,7 +4,6 @@ describe('ApiTests', () => {
         cy.request({
             method: 'GET',
             url: "/posts",
-            form: true,
             body: "get post"
 
         }).then(response => {
@@ -19,7 +18,6 @@ describe('ApiTests', () => {
         cy.request({
             method: 'GET',
             url: "/posts?_limit=10",
-            form: true,
             body: "get fist 10 posts"
 
         }).then(response => {
@@ -34,7 +32,6 @@ describe('ApiTests', () => {
         cy.request({
             method: 'GET',
             url: "/posts?id=55&id=60",
-            form: true,
             body: "get posts with ids"
 
         }).then(response => {
@@ -61,7 +58,7 @@ describe('ApiTests', () => {
         cy.request({
             method: 'POST',
             url: '/posts',
-            body: 'create new post'
+            body: createPost
 
         }).then((response) => {
             cy.log('Verify status code is 201');
