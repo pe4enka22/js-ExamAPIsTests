@@ -50,31 +50,36 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it.only('Create a post', () => { //fix registration and add token
-    const newPostId = 1147;
+  it('Create a post', () => { // success
+    let token = '';
+    let userDataBody = {email: userLogin, password: userPassword}
+    const createPostBody = {
+      "title": "sunt aut facere repellat",
+      "body": "quia et suscipit suscipit"
+    };
+
+    cy.log('Register new user');
     cy.request({
       method: 'POST',
       url: '/register',
-      body: {
-        email: userLogin,
-        password: userPassword
-      }
+      body: userDataBody
 
     }).then(response => {
-      console.log(response)
+      cy.log('Verify user is created');
       expect(response.status).to.eq(201);
+
+      cy.log('Get user access token');
+      token = response.body.token;
     })
 
     cy.log('Try to create post on /664/posts page');
     cy.request({
       method: 'POST',
       url: "/664/posts",
-      body: {
-        "userId": 1,
-        "id": 123,
-        "title": "sunt aut facere repellat",
-        "body": "quia et suscipit suscipit"
+      headers: {
+        'Authorization': `Bearer ${token}`
       },
+      body: createPostBody,
       failOnStatusCode: false
 
     }).then(response => {
@@ -83,35 +88,28 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it.only('Create post with adding access token in header', () => {
+  it('Create post with adding access token in header', () => { //success
     let token = '';
-  //add registration
-   // cy.request({
-    //  method: 'POST',
-   //  url: '/register',
-   //   body: {}
+    let userDataBody = {email: userLogin, password: userPassword}
+    const createPostBody = {
+      "title": "sunt aut facere repellat",
+      "body": "quia et suscipit suscipit"
+    };
 
-   // }).then(response => {
-   //   console.log(response)
-  //    expect(response.status).to.eq(201);
-   // })
-
-
-    cy.log('Create new user')
+    cy.log('Register new user');
     cy.request({
       method: 'POST',
-      url: '/users',
-      body: {
-        userLogin,
-        userPassword
-      }
+      url: '/register',
+      body: userDataBody
 
     }).then(response => {
+      console.log(response);
+      cy.log('Verify user is created');
       expect(response.status).to.eq(201);
 
-      cy.log('Get user access token')
+      cy.log('Get user access token');
       token = response.body.token;
-    });
+    })
 
     cy.log('Create new post using access token in header')
     cy.request({
@@ -120,7 +118,7 @@ describe('ApiTests', () => { //success
       headers: {
         'Authorization': `Bearer ${token}`
       },
-      body: 'create new post'
+      body: createPostBody
 
     }).then(response => {
       cy.log('Verify status code is 201 and post is created')
@@ -129,36 +127,78 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it('Create post entity and verify that the entity is created', () => {
-    //create new user before - post can't be created without token
-    cy.log('Add json post data for request');
-    const createPost = {
-      title: 'TestTitle',
-      body: 'Test body'
+  it('Create post entity and verify that the entity is created', () => { //success
+    let token = '';
+    let userDataBody = {email: userLogin, password: userPassword}
+    const createPostBody = {
+      "title": "sunt aut facere repellat",
+      "body": "quia et suscipit suscipit"
     };
+
+    cy.log('Register new user');
+    cy.request({
+      method: 'POST',
+      url: '/register',
+      body: userDataBody
+
+    }).then(response => {
+      console.log(response);
+      cy.log('Verify user is created');
+      expect(response.status).to.eq(201);
+
+      cy.log('Get user access token');
+      token = response.body.token;
+    })
+
     cy.log('Create post by created json post in body');
     cy.request({
       method: 'POST',
       url: '/posts',
-      body: createPost
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: createPostBody
 
     }).then((response) => {
       cy.log('Verify status code is 201 and post is created with correct data');
       expect(response.status).to.eq(201);
-      expect(response.body.title).to.eq('TestTitle');
-      expect(response.body.body).to.eq('Test body');
+      expect(response.body.title).to.eq(createPostBody.title);
+      expect(response.body.body).to.eq(createPostBody.body);
     });
   })
 
-  it('Update non-existing entity', () => {
+  it('Update non-existing entity', () => { //success
+    let token = '';
+    let userDataBody = {email: userLogin, password: userPassword};
     const notExistingPostId = 249;
+    const updatePostBody = {
+      "title": "sunt aut facere repellat upd",
+      "body": "quia et suscipit suscipit upd"
+    };
+
+    cy.log('Register new user');
+    cy.request({
+      method: 'POST',
+      url: '/register',
+      body: userDataBody
+
+    }).then(response => {
+      console.log(response);
+      cy.log('Verify user is created');
+      expect(response.status).to.eq(201);
+
+      cy.log('Get user access token');
+      token = response.body.token;
+    })
 
     cy.log('Request update of not existing post in body');
     cy.request({
       method: 'PUT',
       url: `/posts/${notExistingPostId}`,
-      title: 'Updated Post Title', //delete
-      body: 'This is the updated body of the post.',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: updatePostBody,
       failOnStatusCode: false
 
     }).then((response) => {
@@ -167,43 +207,86 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it('Create post entity and update the created entity', () => {
-    let postId = '';
+  it('Create post entity and update the created entity', () => { //success
+    let token;
+    let postId;
+    let userDataBody = {email: userLogin, password: userPassword};
+    const createPostBody = {
+      "title": "sunt aut facere repellat",
+      "body": "quia et suscipit suscipit"
+    };
+    const updatePostBody = {
+      "title": "sunt aut facere repellat upd",
+      "body": "quia et suscipit suscipit upd"
+    };
 
-    cy.log('Create new post');
+    cy.log('Register new user');
+    cy.request({
+      method: 'POST',
+      url: '/register',
+      body: userDataBody
+
+    }).then(response => {
+      console.log(response);
+      cy.log('Verify user is created');
+      expect(response.status).to.eq(201);
+
+      cy.log('Get user access token');
+      token = response.body.token;
+    })
+
+    cy.log('Create new post using access token in header')
     cy.request({
       method: 'POST',
       url: '/posts',
-      title: 'Test Post Title', //delete
-      body: 'Test Post Body'
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: createPostBody
 
     }).then(response => {
-      cy.log('Verify status code is 201 and post is created');
+      cy.log('Verify status code is 201 and post is created')
       expect(response.status).to.eq(201);
       expect(response.body).to.have.property('id');
 
-      cy.log('Get postID');
+      cy.log('Get new post id');
       postId = response.body.id;
-    });
 
-    cy.log('Update created post');
-    cy.request({
-      method: 'PUT',
-      url: `/posts/${postId}`,
-      title: 'Updated Post Title', //delete
-      body: 'Updated Post Body',
-      failOnStatusCode: false
+      cy.log('Update created post');
+      cy.request({
+        method: 'PUT',
+        url: `/posts/${postId}`,
+        body: updatePostBody,
+        failOnStatusCode: false
 
-    }).then(response => {
-      cy.log('Verify status code is 200 and post is updated');
-      expect(response.status).to.eq(200);
-      expect(response.body).to.deep.equal('Updated Post Body');
-      expect(response.body.title).to.deep.equal('Updated Post Title');
-    });
+      }).then(response => {
+        cy.log('Verify status code is 200 and post is updated');
+        expect(response.status).to.eq(200);
+        expect(response.body.title).to.eq(updatePostBody.title);
+        expect(response.body.body).to.eq(updatePostBody.body);
+      });
+    })
   });
 
-  it('Delete non-existing post entity', () => {
-    const notExistingPostId = 247;
+  it('Delete non-existing post entity', () => { //success
+    const notExistingPostId = 249;
+    let token = '';
+    let userDataBody = {email: userLogin, password: userPassword};
+
+    cy.log('Register new user');
+    cy.request({
+      method: 'POST',
+      url: '/register',
+      body: userDataBody
+
+    }).then(response => {
+      console.log(response);
+      cy.log('Verify user is created');
+      expect(response.status).to.eq(201);
+
+      cy.log('Get user access token');
+      token = response.body.token;
+    })
 
     cy.log('Check that post is not exist');
     cy.request({
@@ -228,36 +311,64 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it('Create post entity, update the created entity, and delete the entity', () => {
-    let postId = '';
+  it('Create post entity, update the created entity, and delete the entity', () => { //success
+    let token;
+    let postId;
+    let userDataBody = {email: userLogin, password: userPassword};
+    const createPostBody = {
+      "title": "sunt aut facere repellat",
+      "body": "quia et suscipit suscipit"
+    };
+    const updatePostBody = {
+      "title": "sunt aut facere repellat upd",
+      "body": "quia et suscipit suscipit upd"
+    };
 
-    cy.log('Create new post');
+    cy.log('Register new user');
+    cy.request({
+      method: 'POST',
+      url: '/register',
+      body: userDataBody
+
+    }).then(response => {
+      console.log(response);
+      cy.log('Verify user is created');
+      expect(response.status).to.eq(201);
+
+      cy.log('Get user access token');
+      token = response.body.token;
+    })
+
+    cy.log('Create new post using access token in header')
     cy.request({
       method: 'POST',
       url: '/posts',
-      title: 'Test Post Title', //delete
-      body: 'Test Post Body'
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: createPostBody
 
     }).then(response => {
-      cy.log('Verify status code is 201 and post is created');
+      cy.log('Verify status code is 201 and post is created')
       expect(response.status).to.eq(201);
       expect(response.body).to.have.property('id');
 
-      cy.log('Get postID');
+      cy.log('Get new post id');
       postId = response.body.id;
-    });
 
-    cy.log('Update created post');
-    cy.request({
-      method: 'PUT',
-      url: `/posts/${postId}`,
-      title: 'Updated Post Title', //delete
-      body: 'Updated Post Body',
-      failOnStatusCode: false
+      cy.log('Update created post');
+      cy.request({
+        method: 'PUT',
+        url: `/posts/${postId}`,
+        body: updatePostBody,
+        failOnStatusCode: false
 
-    }).then(response => {
-      cy.log('Verify status code is 200 and post is updated');
-      expect(response.body).to.deep.equal({});
+      }).then(response => {
+        cy.log('Verify status code is 200 and post is updated');
+        expect(response.status).to.eq(200);
+        expect(response.body.title).to.eq(updatePostBody.title);
+        expect(response.body.body).to.eq(updatePostBody.body);
+      });
 
       cy.log('Delete created post');
       cy.request({
@@ -268,6 +379,19 @@ describe('ApiTests', () => { //success
         cy.log('Verify status code is 200 and post is deleted');
         expect(response.status).to.eq(200);
       });
-    });
+
+      cy.log('Go to post URL and check that page is not exist');
+      cy.request({
+        method: 'GET',
+        url: `/posts/${postId}`,
+        body: "get post with deleted id",
+        failOnStatusCode: false
+
+      }).then(response => {
+        cy.log('Verify status code is 404 and post is not exist');
+        expect(response.status).to.eq(404);
+      });
+
+    })
   });
 })
