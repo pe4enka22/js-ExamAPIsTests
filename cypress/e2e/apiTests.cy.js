@@ -174,6 +174,7 @@ describe('ApiTests', () => {
       expect(response.body.title).to.deep.equal('Updated Post Title');
     });
   });
+
   it('Delete non-existing post entity', () => {
     const notExistingPostId = 247;
 
