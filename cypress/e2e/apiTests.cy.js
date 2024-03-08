@@ -61,19 +61,22 @@ describe('ApiTests', () => { //success
   it('Create a post', () => { // success
     let token = '';
 
-    cy.log('Register new user');
-    cy.request({
-      method: 'POST',
-      url: '/register',
-      body: userDataBody
+    it('Create a new user', () => {
+      cy.log('Register new user');
+      cy.request({
+        method: 'POST',
+        url: '/register',
+        body: userDataBody
 
-    }).then(response => {
-      cy.log('Verify user is created');
-      expect(response.status).to.eq(201);
+      }).then(response => {
+        cy.log('Verify user is created');
+        expect(response.status).to.eq(201);
 
-      cy.log('Get user access token');
-      token = response.body.token;
+        cy.log('Get user access token');
+        token = response.body.token;
+      })
     })
+
 
     cy.log('Try to create post on /664/posts page');
     cy.request({
@@ -94,19 +97,20 @@ describe('ApiTests', () => { //success
   it('Create post with adding access token in header', () => { //success
     let token = '';
 
-    cy.log('Register new user');
-    cy.request({
-      method: 'POST',
-      url: '/register',
-      body: userDataBody
+    it('Create a new user', () => {
+      cy.log('Register new user');
+      cy.request({
+        method: 'POST',
+        url: '/register',
+        body: userDataBody
 
-    }).then(response => {
-      console.log(response);
-      cy.log('Verify user is created');
-      expect(response.status).to.eq(201);
+      }).then(response => {
+        cy.log('Verify user is created');
+        expect(response.status).to.eq(201);
 
-      cy.log('Get user access token');
-      token = response.body.token;
+        cy.log('Get user access token');
+        token = response.body.token;
+      })
     })
 
     cy.log('Create new post using access token in header')
@@ -128,19 +132,20 @@ describe('ApiTests', () => { //success
   it('Create post entity and verify that the entity is created', () => { //success
     let token = '';
 
-    cy.log('Register new user');
-    cy.request({
-      method: 'POST',
-      url: '/register',
-      body: userDataBody
+    it('Create a new user', () => {
+      cy.log('Register new user');
+      cy.request({
+        method: 'POST',
+        url: '/register',
+        body: userDataBody
 
-    }).then(response => {
-      console.log(response);
-      cy.log('Verify user is created');
-      expect(response.status).to.eq(201);
+      }).then(response => {
+        cy.log('Verify user is created');
+        expect(response.status).to.eq(201);
 
-      cy.log('Get user access token');
-      token = response.body.token;
+        cy.log('Get user access token');
+        token = response.body.token;
+      })
     })
 
     cy.log('Create post by created json post in body');
@@ -163,19 +168,20 @@ describe('ApiTests', () => { //success
   it('Update non-existing entity', () => { //success
     let token = '';
 
-    cy.log('Register new user');
-    cy.request({
-      method: 'POST',
-      url: '/register',
-      body: userDataBody
+    it('Create a new user', () => {
+      cy.log('Register new user');
+      cy.request({
+        method: 'POST',
+        url: '/register',
+        body: userDataBody
 
-    }).then(response => {
-      console.log(response);
-      cy.log('Verify user is created');
-      expect(response.status).to.eq(201);
+      }).then(response => {
+        cy.log('Verify user is created');
+        expect(response.status).to.eq(201);
 
-      cy.log('Get user access token');
-      token = response.body.token;
+        cy.log('Get user access token');
+        token = response.body.token;
+      })
     })
 
     cy.log('Request update of not existing post in body');
@@ -198,19 +204,20 @@ describe('ApiTests', () => { //success
     let token;
     let postId;
 
-    cy.log('Register new user');
-    cy.request({
-      method: 'POST',
-      url: '/register',
-      body: userDataBody
+    it('Create a new user', () => {
+      cy.log('Register new user');
+      cy.request({
+        method: 'POST',
+        url: '/register',
+        body: userDataBody
 
-    }).then(response => {
-      console.log(response);
-      cy.log('Verify user is created');
-      expect(response.status).to.eq(201);
+      }).then(response => {
+        cy.log('Verify user is created');
+        expect(response.status).to.eq(201);
 
-      cy.log('Get user access token');
-      token = response.body.token;
+        cy.log('Get user access token');
+        token = response.body.token;
+      })
     })
 
     cy.log('Create new post using access token in header')
@@ -249,19 +256,20 @@ describe('ApiTests', () => { //success
   it('Delete non-existing post entity', () => { //success
     let token = '';
 
-    cy.log('Register new user');
-    cy.request({
-      method: 'POST',
-      url: '/register',
-      body: userDataBody
+    it('Create a new user', () => {
+      cy.log('Register new user');
+      cy.request({
+        method: 'POST',
+        url: '/register',
+        body: userDataBody
 
-    }).then(response => {
-      console.log(response);
-      cy.log('Verify user is created');
-      expect(response.status).to.eq(201);
+      }).then(response => {
+        cy.log('Verify user is created');
+        expect(response.status).to.eq(201);
 
-      cy.log('Get user access token');
-      token = response.body.token;
+        cy.log('Get user access token');
+        token = response.body.token;
+      })
     })
 
     cy.log('Check that post is not exist');
@@ -291,19 +299,20 @@ describe('ApiTests', () => { //success
     let token;
     let postId;
 
-    cy.log('Register new user');
-    cy.request({
-      method: 'POST',
-      url: '/register',
-      body: userDataBody
+    it('Create a new user', () => {
+      cy.log('Register new user');
+      cy.request({
+        method: 'POST',
+        url: '/register',
+        body: userDataBody
 
-    }).then(response => {
-      console.log(response);
-      cy.log('Verify user is created');
-      expect(response.status).to.eq(201);
+      }).then(response => {
+        cy.log('Verify user is created');
+        expect(response.status).to.eq(201);
 
-      cy.log('Get user access token');
-      token = response.body.token;
+        cy.log('Get user access token');
+        token = response.body.token;
+      })
     })
 
     cy.log('Create new post using access token in header')
