@@ -1,5 +1,5 @@
 import {faker} from '@faker-js/faker'
-const userLogin = faker.internet.displayName({ firstName: 'Jeanne', lastName: 'Doe'});
+const userLogin = faker.internet.userName('Jeanne', 'Doe');
 const userPassword = faker.internet.password();
 
 describe('ApiTests', () => {
@@ -105,13 +105,15 @@ describe('ApiTests', () => {
 
   it('Create post entity and verify that the entity is created', () => {
     cy.log('Add json post data for request');
-
+    const createPost = {
+      title: 'TestTitle',
+      body: 'Test body'
+    };
     cy.log('Create post by created json post in body');
     cy.request({
       method: 'POST',
       url: '/posts',
-      title: 'TestTitle',
-      body: 'Test body'
+      body: createPost
 
     }).then((response) => {
       cy.log('Verify status code is 201 and post is created with correct data');
