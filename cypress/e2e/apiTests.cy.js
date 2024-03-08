@@ -10,7 +10,7 @@ let notExistingPostId = 3543;
 let userDataBody = {email: userLogin, password: userPassword};
 let postCreateDataBody= {title: postCreateTitle, body: postCreateBody};
 let postUpdateDataBody= {title: postUpdateTitle, body: postUpdateBody};
-describe('ApiTests', () => { //success
+describe('ApiTests', () => {
   it('Get all posts', () => {
     cy.log('Get all posts');
     cy.request({
@@ -25,7 +25,7 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it('Get only first 10 posts', () => { //success
+  it('Get only first 10 posts', () => {
     cy.log('Get first 10 posts');
     cy.request({
       method: 'GET',
@@ -39,7 +39,7 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it('Get posts with id = 55 and id = 60', () => { //success
+  it('Get posts with id = 55 and id = 60', () => {
     cy.log('Get posts with 55 and 60 ids');
     cy.request({
       method: 'GET',
@@ -58,7 +58,7 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it('Create a post', () => { // success
+  it('Create a post', () => { /
     let token = '';
 
     it('Create a new user', () => {
@@ -94,7 +94,7 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it('Create post with adding access token in header', () => { //success
+  it('Create post with adding access token in header', () => {
     let token = '';
 
     it('Create a new user', () => {
@@ -129,7 +129,7 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it('Create post entity and verify that the entity is created', () => { //success
+  it('Create post entity and verify that the entity is created', () => {
     let token = '';
 
     it('Create a new user', () => {
@@ -165,7 +165,7 @@ describe('ApiTests', () => { //success
     });
   })
 
-  it('Update non-existing entity', () => { //success
+  it('Update non-existing entity', () => {
     let token = '';
 
     it('Create a new user', () => {
@@ -200,7 +200,7 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it('Create post entity and update the created entity', () => { //success
+  it('Create post entity and update the created entity', () => {
     let token;
     let postId;
 
@@ -253,7 +253,7 @@ describe('ApiTests', () => { //success
     })
   });
 
-  it('Delete non-existing post entity', () => { //success
+  it('Delete non-existing post entity', () => {
     let token = '';
 
     it('Create a new user', () => {
@@ -295,7 +295,7 @@ describe('ApiTests', () => { //success
     })
   })
 
-  it('Create post entity, update the created entity, and delete the entity', () => { //success
+  it('Create post entity, update the created entity, and delete the entity', () => {
     let token;
     let postId;
 
