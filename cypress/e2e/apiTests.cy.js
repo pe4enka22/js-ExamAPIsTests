@@ -1,8 +1,8 @@
 import {faker} from '@faker-js/faker'
-const userLogin = faker.internet.userName('Jeanne', 'Doe');
+const userLogin = faker.internet.email('Jeanne', 'Doe');
 const userPassword = faker.internet.password();
 
-describe('ApiTests', () => {
+describe('ApiTests', () => { //success
   it('Get all posts', () => {
     cy.log('Get all posts');
     cy.request({
@@ -17,7 +17,7 @@ describe('ApiTests', () => {
     })
   })
 
-  it('Get only first 10 posts', () => {
+  it('Get only first 10 posts', () => { //success
     cy.log('Get first 10 posts');
     cy.request({
       method: 'GET',
@@ -31,7 +31,7 @@ describe('ApiTests', () => {
     })
   })
 
-  it('Get posts with id = 55 and id = 60', () => {
+  it('Get posts with id = 55 and id = 60', () => { //success
     cy.log('Get posts with 55 and 60 ids');
     cy.request({
       method: 'GET',
@@ -50,16 +50,31 @@ describe('ApiTests', () => {
     })
   })
 
-  it('Create a post', () => {
+  it.only('Create a post', () => { //fix registration and add token
     const newPostId = 1147;
+    cy.request({
+      method: 'POST',
+      url: '/register',
+      body: {
+        email: userLogin,
+        password: userPassword
+      }
+
+    }).then(response => {
+      console.log(response)
+      expect(response.status).to.eq(201);
+    })
 
     cy.log('Try to create post on /664/posts page');
     cy.request({
       method: 'POST',
       url: "/664/posts",
-      title: 'TestTitle',
-      body: 'Test body',
-      id: newPostId,
+      body: {
+        "userId": 1,
+        "id": 123,
+        "title": "sunt aut facere repellat",
+        "body": "quia et suscipit suscipit"
+      },
       failOnStatusCode: false
 
     }).then(response => {
@@ -68,8 +83,19 @@ describe('ApiTests', () => {
     })
   })
 
-  it('Create post with adding access token in header', () => {
+  it.only('Create post with adding access token in header', () => {
     let token = '';
+  //add registration
+   // cy.request({
+    //  method: 'POST',
+   //  url: '/register',
+   //   body: {}
+
+   // }).then(response => {
+   //   console.log(response)
+  //    expect(response.status).to.eq(201);
+   // })
+
 
     cy.log('Create new user')
     cy.request({
@@ -104,6 +130,7 @@ describe('ApiTests', () => {
   })
 
   it('Create post entity and verify that the entity is created', () => {
+    //create new user before - post can't be created without token
     cy.log('Add json post data for request');
     const createPost = {
       title: 'TestTitle',
@@ -130,7 +157,7 @@ describe('ApiTests', () => {
     cy.request({
       method: 'PUT',
       url: `/posts/${notExistingPostId}`,
-      title: 'Updated Post Title',
+      title: 'Updated Post Title', //delete
       body: 'This is the updated body of the post.',
       failOnStatusCode: false
 
@@ -147,7 +174,7 @@ describe('ApiTests', () => {
     cy.request({
       method: 'POST',
       url: '/posts',
-      title: 'Test Post Title',
+      title: 'Test Post Title', //delete
       body: 'Test Post Body'
 
     }).then(response => {
@@ -163,7 +190,7 @@ describe('ApiTests', () => {
     cy.request({
       method: 'PUT',
       url: `/posts/${postId}`,
-      title: 'Updated Post Title',
+      title: 'Updated Post Title', //delete
       body: 'Updated Post Body',
       failOnStatusCode: false
 
@@ -208,7 +235,7 @@ describe('ApiTests', () => {
     cy.request({
       method: 'POST',
       url: '/posts',
-      title: 'Test Post Title',
+      title: 'Test Post Title', //delete
       body: 'Test Post Body'
 
     }).then(response => {
@@ -224,7 +251,7 @@ describe('ApiTests', () => {
     cy.request({
       method: 'PUT',
       url: `/posts/${postId}`,
-      title: 'Updated Post Title',
+      title: 'Updated Post Title', //delete
       body: 'Updated Post Body',
       failOnStatusCode: false
 
